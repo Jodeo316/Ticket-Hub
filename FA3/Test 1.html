@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Music Events & Ticket Generator</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: black;
+            color: white;
+        }
+        .event, .content {
+            background: white;
+            color: black;
+            padding: 20px;
+            margin: 20px auto;
+            width: 50%;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1, h2 {
+            color: red;
+        }
+        nav {
+            margin-bottom: 20px;
+        }
+        nav a {
+            color: white;
+            margin: 0 15px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .ticket-link {
+            display: block;
+            font-size: 16px;
+            color: #007BFF;
+            text-decoration: underline;
+            cursor: pointer;
+            margin: 10px 0;
+        }
+        .ticket-link:hover {
+            color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <a href="Dummy 1 Index.html">Home</a> | 
+        <a href="Dummy 2 Service.html">Services</a> | 
+        <a href="Dummy 3 Contact.html">Contact</a>
+    </nav>
+
+    <h1>🎶 Upcoming Music Events 🎶</h1>
+
+    <div class="event">
+        <h2>RockFest 2025</h2>
+        <p><strong>Date:</strong> June 15, 2025</p>
+        <p><strong>Location:</strong> Nelson Mandela Bay Stadium</p>
+        <p><strong>Artists:</strong> Led Zeppelin, Pink Floyd, Queen</p>
+        <span class="ticket-link" onclick="generateTicket('RockFest 2025', 'June 15, 2025', 'Nelson Mandela Bay Stadium')">Download Ticket</span>
+    </div>
+
+    <div class="event">
+        <h2>Emo Night</h2>
+        <p><strong>Date:</strong> July 5, 2025</p>
+        <p><strong>Location:</strong> The Bay Jazz Club</p>
+        <p><strong>Artists:</strong> My Chemical Romance, Fall Out Boy</p>
+        <span class="ticket-link" onclick="generateTicket('Emo Night', 'July 5, 2025', 'The Bay Jazz Club')">Download Ticket</span>
+    </div>
+
+    <div class="event">
+        <h2>Winter DnB Party</h2>
+        <p><strong>Date:</strong> August 20, 2025</p>
+        <p><strong>Location:</strong> Oceanfront Club</p>
+        <p><strong>Artists:</strong> Goldie, Andy C, DJ SUV</p>
+        <span class="ticket-link" onclick="generateTicket('Winter DnB Party', 'August 20, 2025', 'Oceanfront Club')">Download Ticket</span>
+    </div>
+
+    <script>
+        const { jsPDF } = window.jspdf;
+
+        async function generateTicket(eventName, eventDate, eventVenue) {
+            const doc = new jsPDF();
+            const uniqueId = "VIP-" + Math.random().toString(36).substr(2, 9).toUpperCase();
+
+            const qrText = `Ticket ID: ${uniqueId}
+Event: ${eventName}
+Date: ${eventDate}
+Venue: ${eventVenue}`;
+
+            const qrCodeDataUrl = await QRCode.toDataURL(qrText);
+
+            doc.setFontSize(22);
+            doc.text("Concert Ticket", 60, 20);
+
+            doc.setFontSize(16);
+            doc.text(`Event: ${eventName}`, 20, 40);
+            doc.text(`Date: ${eventDate}`, 20, 50);
+            doc.text(`Venue: ${eventVenue}`, 20, 60);
+            doc.line(10, 70, 200, 70);
+
+            doc.setFontSize(12);
+            doc.text(`Ticket ID: ${uniqueId}`, 20, 80);
+            doc.text("Scan the QR code to verify your ticket.", 20, 90);
+
+            doc.addImage(qrCodeDataUrl, "PNG", 20, 100, 50, 50);
+
+            doc.save(`${eventName.replace(/\s+/g, '_')}_Ticket.pdf`);
+        }
+    </script>
+
+</body>
+</html>
